@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">NewsApplication</string>
+
+    <string name="txt_headlines">HEADLINES</string>
+    <string name="txt_exit_app">Press Back again to Exit.</string>
+    <string name="txt_news_detail_page">News Detail Page</string>
+</resources>
