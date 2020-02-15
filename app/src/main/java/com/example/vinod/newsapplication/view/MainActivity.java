@@ -1,19 +1,25 @@
 package com.example.vinod.newsapplication.view;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.vinod.newsapplication.R;
 import com.example.vinod.newsapplication.adapter.NewsListAdapter;
 import com.example.vinod.newsapplication.database.DbHandler;
+import com.example.vinod.newsapplication.model.Article;
 import com.example.vinod.newsapplication.model.News;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -23,17 +29,22 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static com.example.vinod.newsapplication.utils.Constants.NEWS_DATA_KEY;
 
-public class MainActivity extends AppCompatActivity implements NewsListAdapter.IAdapterToActivityCommunicator{
+public class MainActivity extends AppCompatActivity implements NewsListAdapter.IAdapterToActivityCommunicator {
 
     private RecyclerView mRecyclerView;
     private ProgressBar mProgressBar;
+    private TextView mSortTextView;
     private News news;
+    private List<String> sortList = new ArrayList<>();
+    private List<Article> mArticlesList = new ArrayList<>();
+    private NewsListAdapter adapter;
     String newsStringData;
-    public MainActivity() {
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +52,11 @@ public class MainActivity extends AppCompatActivity implements NewsListAdapter.I
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.rv_news_list);
         mProgressBar = findViewById(R.id.pb_progress);
+        mSortTextView = findViewById(R.id.tv_sort);
+        mSortTextView.setInputType(InputType.TYPE_NULL);
         mProgressBar.setVisibility(View.VISIBLE);
+        sortList.add("Old to New");
+        sortList.add("New to Old");
         initViewsAndNetworkCall();
     }
 
@@ -59,11 +74,13 @@ public class MainActivity extends AppCompatActivity implements NewsListAdapter.I
     }
 
     private void callNewsListAdapter() {
-        NewsListAdapter adapter = new NewsListAdapter(news.getArticles(), this);
+        mArticlesList = news.getArticles();
+        adapter = new NewsListAdapter(mArticlesList, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(adapter);
+        initSorting();
     }
 
     @Override
@@ -126,4 +143,27 @@ public class MainActivity extends AppCompatActivity implements NewsListAdapter.I
         return new GsonBuilder().setLenient().create().fromJson(dbHandler.getNewsData(), News.class);
     }
 
+    private void initSorting() {
+        final ArrayAdapter<String> spinner_countries = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_dropdown_item, sortList);
+
+        mSortTextView.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Select Sort")
+                        .setAdapter(spinner_countries, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (which == 0) {
+                                    Collections.reverse(mArticlesList);
+                                } else if (which == 1) {
+                                    Collections.reverse(mArticlesList);
+                                }
+                                adapter.notifyDataSetChanged();
+                                dialog.dismiss();
+                            }
+                        }).create().show();
+            }
+        });
+    }
 }
