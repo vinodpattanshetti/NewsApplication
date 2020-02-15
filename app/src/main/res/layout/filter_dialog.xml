@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_title"
+        android:textSize="@dimen/dimen_14sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dimen_64dp"
+        android:text="Filter Based On Publisher"/>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_instruction"
+        android:textSize="@dimen/dimen_14sp"
+        android:textColor="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:layout_below="@+id/tv_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dimen_16dp"
+        android:text="Please add Publisher name in below box"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_instruction"
+        android:padding="@dimen/dimen_16dp"
+        android:layout_margin="@dimen/dimen_16dp"
+        android:id="@+id/et_box"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_16dp"
+        android:layout_marginBottom="@dimen/dimen_64dp"
+        android:background="@color/colorPrimaryDark"
+        android:textColor="@color/color_white"
+        android:textSize="@dimen/dimen_16sp"
+        android:id="@+id/bt_submit"
+        android:layout_below="@+id/et_box"
+        android:text="Submit"/>
+
+</RelativeLayout>

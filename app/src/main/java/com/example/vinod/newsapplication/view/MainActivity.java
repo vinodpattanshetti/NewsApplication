@@ -2,6 +2,7 @@ package com.example.vinod.newsapplication.view;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,9 +11,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -43,6 +48,12 @@ public class MainActivity extends AppCompatActivity implements NewsListAdapter.I
     private News news;
     private List<String> sortList = new ArrayList<>();
     private List<Article> mArticlesList = new ArrayList<>();
+    private List<Article> mOriginalArticlesList = new ArrayList<>();
+    List<Article> mFirstFilterArticle1 = new ArrayList<>();
+    List<Article> mFirstFilterArticle2 = new ArrayList<>();
+    List<Article> mFirstFilterArticle3 = new ArrayList<>();
+    List<Article> mFirstFilterArticle4 = new ArrayList<>();
+    List<Article> mFirstFilterArticle5 = new ArrayList<>();
     private NewsListAdapter adapter;
     String newsStringData;
 
@@ -74,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements NewsListAdapter.I
     }
 
     private void callNewsListAdapter() {
+        mOriginalArticlesList = news.getArticles();
         mArticlesList = news.getArticles();
         adapter = new NewsListAdapter(mArticlesList, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
@@ -81,6 +93,8 @@ public class MainActivity extends AppCompatActivity implements NewsListAdapter.I
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(adapter);
         initSorting();
+        //inflateFilterAlertDialog();
+        initFilter();
     }
 
     @Override
@@ -165,5 +179,101 @@ public class MainActivity extends AppCompatActivity implements NewsListAdapter.I
                         }).create().show();
             }
         });
+    }
+
+    private void initFilter() {
+        //TechCrunch
+        //The Wall Street Journal
+        //CNN
+        //CNBC
+        //Marketwatch.com
+        for (int i = 0; i < mArticlesList.size(); i++) {
+            if ("TechCrunch".equals(mArticlesList.get(i).getSource().getName())) {
+                mFirstFilterArticle1.add(mArticlesList.get(i));
+            }
+        }
+
+        for (int i = 0; i < mArticlesList.size(); i++) {
+            if ("The Wall Street Journal".equals(mArticlesList.get(i).getSource().getName())) {
+                mFirstFilterArticle2.add(mArticlesList.get(i));
+            }
+        }
+
+        for (int i = 0; i < mArticlesList.size(); i++) {
+            if ("CNN".equals(mArticlesList.get(i).getSource().getName())) {
+                mFirstFilterArticle3.add(mArticlesList.get(i));
+            }
+        }
+
+        for (int i = 0; i < mArticlesList.size(); i++) {
+            if ("CNBC".equals(mArticlesList.get(i).getSource().getName())) {
+                mFirstFilterArticle4.add(mArticlesList.get(i));
+            }
+        }
+
+        for (int i = 0; i < mArticlesList.size(); i++) {
+            if ("Marketwatch.com".equals(mArticlesList.get(i).getSource().getName())) {
+                mFirstFilterArticle5.add(mArticlesList.get(i));
+            }
+        }
+    }
+
+    private void inflateFilterAlertDialog() {
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.filter_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        final AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+        AppCompatEditText editText = dialogView.findViewById(R.id.et_box);
+        final String[] filterText = {null};
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 4) {
+                    filterText[0] = s.toString();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        Button button = dialogView.findViewById(R.id.bt_submit);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (filterText[0]) {
+                    case "TechCrunch":
+                        mArticlesList = mFirstFilterArticle1;
+                        break;
+                    case "The Wall Street Journal":
+                        mArticlesList = mFirstFilterArticle2;
+                        break;
+                    case "CNN":
+                        mArticlesList = mFirstFilterArticle3;
+                        break;
+                    case "CNBC":
+                        mArticlesList = mFirstFilterArticle4;
+                        break;
+                    case "Marketwatch.com":
+                        mArticlesList = mFirstFilterArticle5;
+                        break;
+                    default:
+                        mArticlesList = mOriginalArticlesList;
+                        break;
+                }
+                adapter.notifyDataSetChanged();
+                alertDialog.dismiss();
+            }
+        });
+
     }
 }

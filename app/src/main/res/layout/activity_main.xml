@@ -46,10 +46,23 @@
                 android:gravity="end"
                 android:textSize="@dimen/dimen_20sp"
                 android:layout_centerVertical="true"
+                android:textColor="@color/color_white"
+                android:text="SORT"
+                android:layout_toStartOf="@+id/tv_filter"
+                android:layout_marginRight="@dimen/dimen_16dp"
+                android:layout_toLeftOf="@+id/tv_filter" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_filter"
+                android:gravity="end"
+                android:textSize="@dimen/dimen_20sp"
+                android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:textColor="@color/color_white"
-                android:text="SORT"
+                android:text="FILTER"
                 android:layout_marginRight="@dimen/dimen_16dp" />
 
         </RelativeLayout>
